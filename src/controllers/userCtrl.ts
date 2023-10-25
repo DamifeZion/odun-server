@@ -44,6 +44,14 @@ export const register = async (req: express.Request, res: express.Response) => {
       });
     }
 
+    if (!validator.isStrongPassword(password)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must contain at least one uppercase, lowercase, number and special character",
+      });
+    }
+
     const hash = await hashPassword(password);
 
     // Check if the emailOrPhone is a valid email
@@ -81,7 +89,7 @@ export const register = async (req: express.Request, res: express.Response) => {
       if (user) {
         return res.status(404).json({
           success: false,
-          message: "Email already exists",
+          message: "Phone number already exists",
         });
       }
 
@@ -130,7 +138,7 @@ export const login = async (req: express.Request, res: express.Response) => {
       });
     }
 
-    const user = await userModel.findOne({ emailOrPhone }).select("-password");
+    const user = await userModel.findOne({ emailOrPhone });
 
     if (!user) {
       return res.status(404).json({
@@ -151,7 +159,10 @@ export const login = async (req: express.Request, res: express.Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully logged in",
-      data: user,
+      data: {
+        fullName: user.fullName,
+        emailOrPhone: user.emailOrPhone,
+      },
     });
   } catch (error) {
     res.status(500).json({
