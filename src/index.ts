@@ -2,7 +2,6 @@ import { config } from "dotenv";
 config();
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
-import compression from "compression";
 import cors from "cors";
 
 // Route imports
@@ -17,7 +16,6 @@ app.use(
   })
 );
 
-app.use(compression);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -28,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Routes
 const apiVersion = "/api/v1";
-app.use(`/api/v1/auth`, userRoute);
+app.use(`${apiVersion}/auth`, userRoute);
 
 //DB connection and server running
 const port = process.env.PORT;
