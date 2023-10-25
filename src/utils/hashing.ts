@@ -10,8 +10,5 @@ export const comparePassword = async (
   password: string,
   hashedPassword: string
 ) => {
-  console.log("Plain password:", password);
-  console.log("Hashed password:", hashedPassword);
-
   return await bcrypt.compare(password, hashedPassword);
 };
