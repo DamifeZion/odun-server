@@ -72,11 +72,8 @@ export const register = async (req: express.Request, res: express.Response) => {
         password: hash,
       });
 
-      const token = createToken(_id, process.env.EXPIRATION_TIME);
-
       return res.status(200).json({
         success: true,
-        token: token,
         message: "Successfully signed up with email",
       });
     }
@@ -99,11 +96,8 @@ export const register = async (req: express.Request, res: express.Response) => {
         password: hash,
       });
 
-      const token = createToken(_id, process.env.EXPIRATION_TIME);
-
       return res.status(200).json({
         success: true,
-        token: token,
         message: "Successfully signed up with phone number",
       });
     }
@@ -156,12 +150,15 @@ export const login = async (req: express.Request, res: express.Response) => {
       });
     }
 
+    const token = createToken(user._id, process.env.EXPIRATION_TIME);
+
     res.status(200).json({
       success: true,
       message: "Successfully logged in",
       data: {
         fullName: user.fullName,
         emailOrPhone: user.emailOrPhone,
+        token: token,
       },
     });
   } catch (error) {
